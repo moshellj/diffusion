@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 
-# Equilibriated in 51.438 seconds.
+import sys
+
+### TESTING RESULTS
+# At Rdivs = 10, Equilibriated in 51.438 seconds simulated time, 2m52s real time.
+# at Rdivs = 500, completes a single step in about 15 minutes
+
 #x = right, y = down, z = back
 
 ## constants
@@ -36,7 +41,8 @@ def canDiffuse(here):
 
 # returns the ratio of the maximum conc cell to the min conc cell
 def minMaxRatio():
-	#NEAT LANGUAGE THING: List comprehension! 3 smart for-loops on one line to flatten a 3d list.
+	#NEAT LANGUAGE THING: List comprehension!
+	#multiple smart for-loops on one line to flatten a 3d list.
 	room2d = [z for x in room for y in x for z in y]
 	return min(room2d)/max(room2d)
 
@@ -65,6 +71,7 @@ while minMaxRatio() < 0.99:
 					change = (room[i][j][k] - room[nbr[0]][nbr[1]][nbr[2]])*Dterm
 					room[i][j][k] -= change
 					room[nbr[0]][nbr[1]][nbr[2]] += change
+		#print("i = " + str(i))
 	Ttotal += Tstep
 	print(str(Ttotal) + "\t " + str(minMaxRatio()))
 
