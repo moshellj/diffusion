@@ -4,7 +4,7 @@ using Printf
 
 ### TESTING RESULTS
 # Without partition:
-# at Rdivs = 10, equilibriated in 51.438s simulated, 1m29.845s real time
+# at Rdivs = 10, equilibriated in 51.438s simulated, 51.091s real time
 
 ### CONSTANTS
 
@@ -14,12 +14,12 @@ const Urms = 250.0
 const D = 0.175
 const Rdist = Lroom/Rdivs
 const Tstep = Lroom/Urms/Rdivs
-Dterm = D*Tstep/Rdist/Rdist
+const Dterm = D*Tstep/Rdist/Rdist
 
 room = zeros(Float64, Rdivs, Rdivs, Rdivs)
 
 #offset array for finding neighbors
-offsets = [(-1, 0, 0), (1, 0, 0), (0, -1, 0), (0, 1, 0), (0, 0, -1), (0, 0, 1)]
+const offsets = [(-1, 0, 0), (1, 0, 0), (0, -1, 0), (0, 1, 0), (0, 0, -1), (0, 0, 1)]
 
 ### FUNCTIONS
 # NOT NEAT LANGUAGE THING:
@@ -60,19 +60,18 @@ function diffuse(x, y, z, a, b, c)
 	change = (room[x, y, z] - room[a, b, c])*Dterm
 	room[x, y, z] -= change
 	room[a, b, c] += change
-	return change
+	return
 end
 
 ### MAIN
 
 room[1, 1, 1] = 1e21
 Ttotal = 0.0
-
 while minMaxRatio(room) < 0.99
 	#julia is column-major. this doesn't matter because diffusion jumps between rows & cols constantly
 	#also, NEAT LANGUAGE THING: range constructors and anything that shortens for loops are nice.
-	global Ttotal
 	# Just look at this. This is the platonic ideal of a main function.
+	global Ttotal
 	for x = 1:Rdivs
 		for y = 1:Rdivs
 			for z = 1:Rdivs
