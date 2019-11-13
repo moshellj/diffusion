@@ -12,6 +12,8 @@ D <- 0.175
 Rdist <- Lroom/Rdivs
 Tstep <- Lroom/Urms/Rdivs
 Dterm <- D*Tstep/Rdist/Rdist
+Px <- Rdivs %/% 2 + 1
+Py <- 3*Rdivs %/% 4 + 1
 offsets <- t(array(c(c(-1,0,0),c(1,0,0),c(0,-1,0),c(0,1,0),c(0,0,-1),c(0,0,1)), c(3,6)))
 
 room <- array(rep(0, Rdivs*Rdivs*Rdivs), c(Rdivs, Rdivs, Rdivs))
@@ -38,6 +40,10 @@ inbounds <- function(here){
 		if(n < 1 || n > Rdivs){
 			return(FALSE)
 		}
+	}
+	#PARTITION
+	if(here[x] == Px && here[y] <= Py){
+		return(FALSE)
 	}
 	return(TRUE)
 }
@@ -71,7 +77,8 @@ while(minMaxRatio(room) < 0.99){
 	}
 	}
 	Ttotal <<- Ttotal + Tstep
-	print(c(Ttotal, minMaxRatio(room)))
+	#print(c(Ttotal, minMaxRatio(room)))
 }
 
-print(room)
+print(Ttotal)
+print(minMaxRatio(room))
