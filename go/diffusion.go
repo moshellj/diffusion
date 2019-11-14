@@ -14,22 +14,50 @@ const Dterm float64 = D*Tstep/Rdist/Rdist
 func main(){
 	//for efficiency, room must be a slice and not an array
 	//this is the easiest way, apparently
+	
 	var room [][][]float64
 	room = make([][][]float64, Rdivs)
 	for i := range room {
 		room[i] = make([][]float64, Rdivs)
 		for j := range room[i] {
 			room[i][j] = make([]float64, Rdivs)
-		}
-	}
-	
-	for x := 0; x < Rdivs; x++ {
-		for y := 0; y < Rdivs; y++ {
-			for z := 0; z < Rdivs; z++ {
-				
+			for k := range room[i][j] {
+				room[i][j][k] = 0.0
 			}
 		}
 	}
+
+	Ttotal := 0.0
+	ratio := 0.0
+	for ratio < 0.99 {
+		for x := 0; x < Rdivs; x++ {
+		for y := 0; y < Rdivs; y++ {
+		for z := 0; z < Rdivs; z++ {
+			diffuse(room, x, y, z, x-1, y, z)
+			diffuse(room, x, y, z, x+1, y, z)
+			diffuse(room, x, y, z, x, y-1, z)
+			diffuse(room, x, y, z, x, y+1, z)
+			diffuse(room, x, y, z, x, y, z-1)
+			diffuse(room, x, y, z, x, y, z+1)
+		}
+		}
+		}
+		Ttotal = Ttotal + Tstep
+		ratio = minMaxRatio(room)
+		fmt.Printf("%.6f \t%.8f\n", Ttotal, ratio)
+	}
+}
+
+//diffuses between 2 cells
+//nx,ny,nz must be set beforehand
+func diffuse(room [][][]float64, x int, y int, z int, nx int, ny int, nz int){
+	if(!inbounds(nx, ny, nz) || !inbounds(x, y, z)){
+		return
+	}
+	var change float64 = (room[x][y][z] - room[nx][ny][nz])*Dterm
+	room[x][y][z] = room[x][y][z] - change
+	room[nx][ny][nz] = room[nx][ny][nz] + change
+	return
 }
 
 //checks if a function is in bounds
