@@ -8,7 +8,6 @@ at Rdivs = 500, completed 1 step in 11.147s real time.
 */
 
 import "fmt"
-import "os"
 //import "math"
 
 const Rdivs int = 10
@@ -53,8 +52,7 @@ func main(){
 		}
 		Ttotal = Ttotal + Tstep
 		ratio = minMaxRatio(room)
-		fmt.Printf("%.6f \t%.8f\n", Ttotal, ratio)
-		os.Exit(0)
+		//fmt.Printf("%.6f \t%.8f\n", Ttotal, ratio)
 	}
 	fmt.Printf("%.6f \t%.8f\n", Ttotal, ratio)
 }
