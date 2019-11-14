@@ -1,6 +1,14 @@
 package main
 
+/*
+TESTING RESULTS:
+Without partition:
+at Rdivs = 10, equilibriates in 51.438s simulated time, 2.142s real time. (faster that c!)
+at Rdivs = 500, completed 1 step in 11.147s real time.
+*/
+
 import "fmt"
+import "os"
 //import "math"
 
 const Rdivs int = 10
@@ -26,7 +34,8 @@ func main(){
 			}
 		}
 	}
-
+	
+	room[0][0][0] = 1e21
 	Ttotal := 0.0
 	ratio := 0.0
 	for ratio < 0.99 {
@@ -45,7 +54,9 @@ func main(){
 		Ttotal = Ttotal + Tstep
 		ratio = minMaxRatio(room)
 		fmt.Printf("%.6f \t%.8f\n", Ttotal, ratio)
+		os.Exit(0)
 	}
+	fmt.Printf("%.6f \t%.8f\n", Ttotal, ratio)
 }
 
 //diffuses between 2 cells
@@ -92,5 +103,6 @@ func minMaxRatio(room [][][]float64) float64 {
 			}
 		}
 	}
+	//fmt.Printf("MM: %.15f\t%.15f\n", min, max)
 	return (min/max)
 }
