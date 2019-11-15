@@ -24,7 +24,7 @@ const double Tstep = Lroom/Urms/(double)Rdivs;
 const double Dterm = D * Tstep /Rdist /Rdist;
 const int volelCount = Rdivs*Rdivs*Rdivs;
 
-int partitionOn = 1;
+int partitionOn = 0;
 const int Px = Rdivs/2;
 const int Py = (3*Rdivs)/4;
 

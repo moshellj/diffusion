@@ -5,6 +5,7 @@ using Printf
 ### TESTING RESULTS
 # Without partition:
 # at Rdivs = 10, equilibriated in 51.438s simulated, 51.091s real time
+# at Rdivs = 500, completed one step in 4m45s real time
 
 ### CONSTANTS
 
@@ -82,5 +83,5 @@ while minMaxRatio(room) < 0.99
 		end
 	end
 	Ttotal += Tstep
-	@printf("%9.6f \t%f\n", Ttotal, minMaxRatio(room))
 end
+@printf("%9.6f \t%f\n", Ttotal, minMaxRatio(room))

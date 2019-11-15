@@ -13,7 +13,7 @@ class Diffusion{
 	static void Main(string[] args){
 		// initialize
 		// NEAT LANGUAGE THING: Named arguments! Helps other people understand your code.
-		Room room = new Room(divs: 10, length: 5.0);
+		Room room = new Room(divs: 25, length: 5.0);
 		Gas gas = new Gas(Urms: 250.0, D: 0.175);
 		double Tstep = room.length / gas.rms / (double)(room.divs);
 		double Dterm = gas.D * Tstep / room.cellDist / room.cellDist;
@@ -37,8 +37,9 @@ class Diffusion{
 			}
 			}
 			Ttotal += Tstep;
-			Console.WriteLine("{0:0.000000} \t{1:0.00000000}", Ttotal, minMaxRatio(room));
+			//Console.WriteLine("{0:0.000000} \t{1:0.00000000}", Ttotal, minMaxRatio(room));
 		}
+		Console.WriteLine("{0:0.000000} \t{1:0.00000000}", Ttotal, minMaxRatio(room));
 	}
 	//Calculates the concentration ratio
 	static double minMaxRatio(Room room){

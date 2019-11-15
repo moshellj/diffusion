@@ -7,15 +7,18 @@
 # with Rdivs <- 500, it works. Estimated time just to iterate over the room once is 42 minutes.
 
 #constants
-Rdivs <- 10L
+Rdivs <- 20L
 Lroom <- 5.0
 Urms <- 250.0
 D <- 0.175
 Rdist <- Lroom/Rdivs
 Tstep <- Lroom/Urms/Rdivs
 Dterm <- D*Tstep/Rdist/Rdist
+
+partitionOn <- FALSE
 Px <- Rdivs %/% 2 + 1
 Py <- (3*Rdivs) %/% 4 + 1
+
 offsets <- t(array(c(c(-1,0,0),c(1,0,0),c(0,-1,0),c(0,1,0),c(0,0,-1),c(0,0,1)), c(3,6)))
 
 room <- array(rep(0, Rdivs*Rdivs*Rdivs), c(Rdivs, Rdivs, Rdivs))
@@ -60,7 +63,7 @@ inbounds <- function(here){
 		}
 	}
 	#PARTITION
-	if(here[1] == Px && here[2] <= Py){
+	if(partitionOn && here[1] == Px && here[2] <= Py){
 		return(FALSE)
 	}
 	return(TRUE)

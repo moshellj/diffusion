@@ -73,5 +73,6 @@ while minMaxRatio() < 0.99:
 					room[nbr[0]][nbr[1]][nbr[2]] += change
 		#print("i = " + str(i))
 	Ttotal += Tstep
-	print(str(Ttotal) + "\t " + str(minMaxRatio()))
+	#print(str(Ttotal) + "\t " + str(minMaxRatio()))
+print(str(Ttotal) + "\t" + str(minMaxRatio()))
 

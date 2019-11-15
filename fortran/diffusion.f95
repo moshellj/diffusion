@@ -11,7 +11,7 @@ program diffusion
     !declarations
     implicit none
     !constants
-    integer, parameter :: Rdivs = 500
+    integer, parameter :: Rdivs = 10
     real(kind=8), parameter :: Lroom = 5.0, Urms = 250.0, D = 0.175
     !calculated constants
     real(kind=8) :: Rdist, Tstep, Dterm
@@ -46,8 +46,8 @@ program diffusion
         end do
         end do
         Ttotal = Ttotal + Tstep
-        print "(F10.6,A,F9.8)", Ttotal, achar(9), minMaxRatio(room)
     end do
+    print "(F10.6,A,F9.8)", Ttotal, achar(9), minMaxRatio(room)
 
 contains
 
