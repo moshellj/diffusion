@@ -1,6 +1,7 @@
 #!/usr/bin/sbcl --script
 
-;user    1m32.090s?
+;At Cdivs = 10, equilibriated in 61.726 seconds simulated, 1m10.791s real time.
+; (this is different from all my other programs, but alas, it can't be helped.)
 
 ;;;; CONSTANTS
 (defconstant Cdivs 10)
@@ -19,9 +20,9 @@
 
 (defun inbounds (x y z)
 	(not (or
-		(< x 0.0d0) (> x Cdmax)
-		(< y 0.0d0) (> y Cdmax)
-		(< z 0.0d0) (> z Cdmax)
+		(< x 0) (> x Cdmax)
+		(< y 0) (> y Cdmax)
+		(< z 0) (> z Cdmax)
 	))
 )
 
@@ -61,6 +62,7 @@
 	(dotimes (x Cdmax)
 		(dotimes (y Cdmax)
 			(dotimes (z Cdmax)
+				; I had no idea smart for loops were this old
 				(loop for off in offsets do
 					(diffuse cube (list x y z) off)
 				)
