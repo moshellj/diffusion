@@ -13,7 +13,7 @@ program diffusion
     !constants
     integer, parameter :: Rdivs = 10
     real(kind=8), parameter :: Lroom = 5.0, Urms = 250.0, D = 0.175
-    logical, parameter :: partitionOn = .TRUE.
+    logical, parameter :: partitionOn = .FALSE.
     !calculated constants
     real(kind=8) :: Rdist, Tstep, Dterm
     integer :: volelCount, Px, Py
@@ -97,8 +97,8 @@ subroutine diffuse(room, x, y, z, dx, dy, dz)
         goto 100
     endif
     !partition checking
-    if (partitionOn .and. (x .eq. Px .and. y <= Py) .or. (nx .eq. Px .and. ny &
-        <= Py)) then
+    if (partitionOn .and. ((x .eq. Px .and. y <= Py) .or. (nx .eq. Px .and. ny &
+        <= Py))) then
         goto 100
     endif
     !diffusion
