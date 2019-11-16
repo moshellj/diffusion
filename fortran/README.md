@@ -1,5 +1,5 @@
 To compile: ./fmake
 To run: a.out
 To change settings:
-    Rdivs sets the number if subdivisions in each dimension.
-    Partition not implemented in this language.
+    Rdivs sets the number of subdivisions in each dimension.
+    Set partitionOn to .TRUE. or .FALSE. to enable or disable the partition.

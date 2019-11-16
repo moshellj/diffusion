@@ -13,9 +13,10 @@ program diffusion
     !constants
     integer, parameter :: Rdivs = 10
     real(kind=8), parameter :: Lroom = 5.0, Urms = 250.0, D = 0.175
+    logical, parameter :: partitionOn = .TRUE.
     !calculated constants
     real(kind=8) :: Rdist, Tstep, Dterm
-    integer :: volelCount
+    integer :: volelCount, Px, Py
     !variables
     integer :: xi, yi, zi
     real(kind=8) :: Ttotal
@@ -29,6 +30,8 @@ program diffusion
     Dterm = D * Tstep / Rdist / Rdist
     volelCount = Rdivs*Rdivs*Rdivs
     Ttotal = 0.0
+    Px = Rdivs/2 + 1
+    Py = (3*Rdivs)/4 + 1
     
     !simulation
     room(1, 1, 1) = 1E21
@@ -46,9 +49,9 @@ program diffusion
         end do
         end do
         Ttotal = Ttotal + Tstep
-    end do
+    !end do
     print "(F10.6,A,F9.8)", Ttotal, achar(9), minMaxRatio(room)
-
+    end do
 contains
 
 function minMaxRatio(cube) result(ratio)
@@ -62,11 +65,14 @@ function minMaxRatio(cube) result(ratio)
     do x=1,Rdivs
         do y=1,Rdivs
             do z=1,Rdivs
-                if (cube(x, y, z) .lt. min) then
-                    min = cube(x, y, z)
-                endif
-                if (cube(x, y, z) .gt. max) then
-                    max = cube(x, y, z)
+                if (.not. partitionOn .or. .not. (x .eq. Px .and. &
+                        y .le. Py)) then!partition check
+                    if (cube(x, y, z) .lt. min) then
+                        min = cube(x, y, z)
+                    endif
+                    if (cube(x, y, z) .gt. max) then
+                        max = cube(x, y, z)
+                    endif
                 endif
             end do
         end do
@@ -88,6 +94,11 @@ subroutine diffuse(room, x, y, z, dx, dy, dz)
     if (nx < 1 .or. nx > Rdivs .or. ny < 1 .or. ny > Rdivs .or. nz < 1 .or. &
     nz > Rdivs) then
         ! OK i lied, the one neat thing about fortran is that it has goto
+        goto 100
+    endif
+    !partition checking
+    if (partitionOn .and. (x .eq. Px .and. y <= Py) .or. (nx .eq. Px .and. ny &
+        <= Py)) then
         goto 100
     endif
     !diffusion
