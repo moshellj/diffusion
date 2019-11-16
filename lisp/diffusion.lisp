@@ -1,7 +1,9 @@
 #!/usr/bin/sbcl --script
 
+;user    1m32.090s?
+
 ;;;; CONSTANTS
-(defconstant Cdivs 5)
+(defconstant Cdivs 10)
 (defconstant Cdmax (- Cdivs 1))
 (defconstant Lcube 5.0d0)
 (defconstant Urms 250.0d0)
@@ -11,15 +13,15 @@
 (defconstant Dterm (* D (/ Tstep Cdist Cdist)))
 
 (defconstant offsets (list	
-(vector -1 0 0) (vector 1 0 0) (vector 0 -1 0) (vector 0 1 0) (vector 0 0 -1) (vector 0 0 1)))
+(list -1 0 0) (list 1 0 0) (list 0 -1 0) (list 0 1 0) (list 0 0 -1) (list 0 0 1)))
 
 ;;;; FUNCTIONS
 
 (defun inbounds (x y z)
 	(not (or
-		(< x 0) (> x Cdmax)
-		(< y 0) (> y Cdmax)
-		(< z 0) (> z Cdmax)
+		(< x 0.0d0) (> x Cdmax)
+		(< y 0.0d0) (> y Cdmax)
+		(< z 0.0d0) (> z Cdmax)
 	))
 )
 
@@ -33,13 +35,13 @@
 	(/ minval maxval))
 )
 
-; here, off, nbr are xyz vectors
+; here, off, nbr are xyz lists
 (defun diffuse (cube here off)
-	(let	((nbr (vector	(+ (aref here 0) (aref off 0))
-							(+ (aref here 1) (aref off 1))
-							(+ (aref here 2) (aref off 2)))
+	(let	((nbr (list		(+ (elt here 0) (elt off 0))
+							(+ (elt here 1) (elt off 1))
+							(+ (elt here 2) (elt off 2)))
 			) (change))
-	(when (and (apply inbounds here) (apply inbounds nbr)) (progn
+	(when (and (apply #'inbounds here) (apply #'inbounds nbr)) (progn 
 		;;; NEAT LANGUAGE THING: APPLY lets us use a vector to index an array
 		(setf change (* Dterm (- (apply #'aref cube here) (apply #'aref cube nbr) )))
 		(setf (apply #'aref cube here) (- (apply #'aref cube here) change))
@@ -59,11 +61,17 @@
 	(dotimes (x Cdmax)
 		(dotimes (y Cdmax)
 			(dotimes (z Cdmax)
-				(loop for off in offsets
-					(diffuse cube (vector x y z) off)
+				(loop for off in offsets do
+					(diffuse cube (list x y z) off)
 				)
 			)
 		)
 	)
-	
+	(setf Ttotal (+ Ttotal Tstep))
+	(setf conratio (minMaxRatio cube))
+	;(write Ttotal) (terpri)
+	;(write conratio) (terpri) (terpri)
+	(when (> conratio 0.99d0) (return t))
 )
+(write Ttotal) (terpri)
+(write conratio) (terpri) (terpri)

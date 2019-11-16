@@ -16,7 +16,7 @@
 #define ROOM(X, Y, Z) room[(X)*Rdivs*Rdivs + (Y)*Rdivs + (Z)]
 
 const double Lroom = 5.0;	//Length of room edge in meters
-const int Rdivs = 10;		//Number of divisions in room
+const int Rdivs = 25;		//Number of divisions in room
 const double Urms = 250.0;
 const double D = 0.175;
 const double Rdist = Lroom/(double)Rdivs;
@@ -24,7 +24,7 @@ const double Tstep = Lroom/Urms/(double)Rdivs;
 const double Dterm = D * Tstep /Rdist /Rdist;
 const int volelCount = Rdivs*Rdivs*Rdivs;
 
-int partitionOn = 0;
+int partitionOn = 1;
 const int Px = Rdivs/2;
 const int Py = (3*Rdivs)/4;
 
