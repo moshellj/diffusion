@@ -18,6 +18,10 @@ const Rdist float64 = Lroom/float64(Rdivs)
 const Tstep float64 = Rdist/Urms
 const Dterm float64 = D*Tstep/Rdist/Rdist
 
+const partitionOn bool = true
+const Px int = Rdivs/2
+const Py int = (3*Rdivs)/4
+
 func main(){
 	//for efficiency, room must be a slice and not an array
 	//this is the easiest way, apparently
@@ -60,25 +64,21 @@ func main(){
 //diffuses between 2 cells
 //nx,ny,nz must be set beforehand
 func diffuse(room [][][]float64, x int, y int, z int, nx int, ny int, nz int){
-	if(!inbounds(nx, ny, nz) || !inbounds(x, y, z)){
-		return
+	if(inbounds(nx, ny, nz) && inbounds(x, y, z)){
+		var change float64 = (room[x][y][z] - room[nx][ny][nz])*Dterm
+		room[x][y][z] = room[x][y][z] - change
+		room[nx][ny][nz] = room[nx][ny][nz] + change
 	}
-	var change float64 = (room[x][y][z] - room[nx][ny][nz])*Dterm
-	room[x][y][z] = room[x][y][z] - change
-	room[nx][ny][nz] = room[nx][ny][nz] + change
 	return
 }
 
 //checks if a function is in bounds
 //no partition yet
 func inbounds(x int, y int, z int) bool {
-	if (x < 0 || x >= Rdivs) {
+	if (x < 0 || x >= Rdivs || y < 0 || y >= Rdivs || z < 0 || z >= Rdivs) {
 		return false
 	}
-	if (y < 0 || y >= Rdivs) {
-		return false
-	}
-	if (z < 0 || z >= Rdivs) {
+	if (partitionOn && x == Px && y <= Py){
 		return false
 	}
 	return true
@@ -92,11 +92,13 @@ func minMaxRatio(room [][][]float64) float64 {
 	for x := 0; x < Rdivs; x++ {
 		for y := 0; y < Rdivs; y++ {
 			for z := 0; z < Rdivs; z++ {
+				if(inbounds(x, y, z)){
 				if room[x][y][z] > max {
 					max = room[x][y][z]
 				}
 				if room[x][y][z] < min {
 					min = room[x][y][z]
+				}
 				}
 			}
 		}
