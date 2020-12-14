@@ -33,7 +33,7 @@ class Diffusion{
 		Coord here;
 		double concentrationRatio = minMaxRatio(room);
 		
-		while(minMaxRatio(room) < 0.99){
+		while(concentrationRatio < 0.99){
 			double minConc = 1e100;
 			double maxConc = 0.0;
 			for(int x = 0; x < room.divs; ++x){
